@@ -1,0 +1,3 @@
+module "example/duplicate-right" release "v1.0.0" digest "sha256:8401ad478e670f4caa781336e123e4743c2a3aad1bff823224e9399fcd7d48e3" cycle_policy "acyclic" {
+  export "SharedValue" owner "example/duplicate-right"
+}

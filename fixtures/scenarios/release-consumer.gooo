@@ -1,0 +1,3 @@
+module "example/release-consumer" release "v1.0.0" digest "sha256:22fd72ce9541cc928e6076e748c87efc7d28b03e7cda5e8be3e25013c5ea78eb" cycle_policy "acyclic" {
+  import "example/core" release "v2.0.0" digest "sha256:ca6620e7885e8e27ed1280baf132a9fc6023f121ccd0ddc0ade45fad643dab92" symbol "CoreValue" owner "example/core"
+}

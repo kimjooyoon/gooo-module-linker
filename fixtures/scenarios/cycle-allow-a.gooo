@@ -1,0 +1,4 @@
+module "example/cycle-allow-a" release "v1.0.0" digest "sha256:46ead5254827288dc4c63b724b1d167ea33357aa6000939d87deecc633cb6d50" cycle_policy "allow" {
+  import "example/cycle-allow-b" release "v1.0.0" digest "sha256:9b93536d5f060fd9f85bb932a971696331b249931933b50ab97ac095c918e584" symbol "BValue" owner "example/cycle-allow-b"
+  export "AValue" owner "example/cycle-allow-a"
+}

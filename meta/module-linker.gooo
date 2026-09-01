@@ -1,0 +1,18 @@
+policy "gooo-module-linker/v1" {
+  default "CLOSED"
+  precedence "REFUTED" "UNKNOWN" "CLOSED"
+  rule "duplicate_module" outcome "REFUTED" stage "semantic-link" step "module-identity" reason "module identity is not unique"
+  rule "module_digest_mismatch" outcome "REFUTED" stage "semantic-link" step "module-digest" reason "declared module digest differs from canonical declaration"
+  rule "ownership_mismatch" outcome "REFUTED" stage "semantic-link" step "symbol-ownership" reason "symbol ownership does not match the declaring module identity"
+  rule "duplicate_export" outcome "REFUTED" stage "semantic-link" step "export-uniqueness" reason "exported symbol has more than one owner"
+  rule "release_mismatch" outcome "REFUTED" stage "dependency-resolution" step "exact-release" reason "import requires an exact release identity"
+  rule "digest_mismatch" outcome "REFUTED" stage "dependency-resolution" step "immutable-digest" reason "import digest does not match the immutable dependency digest"
+  rule "missing_import" outcome "UNKNOWN" stage "dependency-resolution" step "resolve-import" reason "immutable dependency or requested symbol is unavailable" unknown_class "missing-immutable-release-or-symbol" next_operation "provide-the-exact-release-and-export" 
+  rule "cycle_acyclic" outcome "REFUTED" stage "cycle-analysis" step "acyclic-policy" reason "dependency cycle violates the acyclic module policy"
+  rule "cycle_unknown" outcome "UNKNOWN" stage "cycle-analysis" step "cycle-policy" reason "cycle policy does not establish whether this cycle is admissible" unknown_class "cycle-policy-indeterminate" next_operation "declare-allow-or-acyclic-policy" 
+  rule "cycle_allow" outcome "CLOSED" stage "cycle-analysis" step "allow-policy" reason "dependency cycle is explicitly allowed by module policy"
+  cycle_policy "acyclic" rule "cycle_acyclic"
+  cycle_policy "unknown" rule "cycle_unknown"
+  cycle_policy "allow" rule "cycle_allow"
+  generation "go" package "main" entrypoint "main"
+}

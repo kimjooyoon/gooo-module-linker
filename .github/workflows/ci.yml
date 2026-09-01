@@ -1,0 +1,29 @@
+name: gooo-module-linker CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  gooo-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Go 1.27
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.27.x'
+      - name: Run metacode-authoritative CI
+        run: bash scripts/ci.sh
+      - name: Upload linked IR, generated Go, and evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gooo-evidence
+          path: ci-artifacts
+          if-no-files-found: error
