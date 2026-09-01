@@ -35,12 +35,12 @@ measure integration bash -c "'$work_dir/gooo-module-linker' -policy meta/module-
 
 cp "$work_dir/conformance.json" "$artifact_dir/conformance.json"
 
-go_files=$(find . -type f -name '*.go' -not -path './.git/*' | wc -l | tr -d '[:space:]')
-gooo_files=$(find . -type f -name '*.gooo' -not -path './.git/*' | wc -l | tr -d '[:space:]')
-go_lines=$(find . -type f -name '*.go' -not -path './.git/*' -print0 | while IFS= read -r -d '' file; do wc -l < "$file"; done | awk '{sum += $1} END {print sum + 0}')
-gooo_lines=$(find . -type f -name '*.gooo' -not -path './.git/*' -print0 | while IFS= read -r -d '' file; do wc -l < "$file"; done | awk '{sum += $1} END {print sum + 0}')
-subdirectories=$(find . -mindepth 1 -type d -not -path './.git/*' | wc -l | tr -d '[:space:]')
-regular_files=$(find . -type f -not -path './.git/*' -not -path './README.md' | wc -l | tr -d '[:space:]')
+go_files=$(find . -type f -name '*.go' -not -path './.git/*' -not -path './ci-artifacts/*' | wc -l | tr -d '[:space:]')
+gooo_files=$(find . -type f -name '*.gooo' -not -path './.git/*' -not -path './ci-artifacts/*' | wc -l | tr -d '[:space:]')
+go_lines=$(find . -type f -name '*.go' -not -path './.git/*' -not -path './ci-artifacts/*' -print0 | while IFS= read -r -d '' file; do wc -l < "$file"; done | awk '{sum += $1} END {print sum + 0}')
+gooo_lines=$(find . -type f -name '*.gooo' -not -path './.git/*' -not -path './ci-artifacts/*' -print0 | while IFS= read -r -d '' file; do wc -l < "$file"; done | awk '{sum += $1} END {print sum + 0}')
+subdirectories=$(find . -mindepth 1 -type d -not -path './.git/*' -not -path './ci-artifacts' -not -path './ci-artifacts/*' | wc -l | tr -d '[:space:]')
+regular_files=$(find . -type f -not -path './.git/*' -not -path './ci-artifacts/*' -not -path './README.md' | wc -l | tr -d '[:space:]')
 generated_count=$(find "$generated_dir" -type f | wc -l | tr -d '[:space:]')
 generated_bytes=$(find "$generated_dir" -type f -print0 | xargs -0 wc -c | awk 'END {print $1 + 0}')
 peak_rss=0
@@ -104,7 +104,7 @@ evidence = {
     "contract": {
         "path": "meta/module-linker.gooo",
         "authority": "metacode",
-        "status_precedence": ["REFUTED", "UNKNOWN", "CLOSED"],
+        "status_precedence": conformance["precedence"],
         "unknown_fields": ["stage", "step", "reason", "unknown_class", "next_operation", "blocked_by"],
     },
     "conformance": conformance,

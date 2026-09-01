@@ -195,7 +195,7 @@ func highestRule(policy Policy, codes map[string]bool) string {
 		if !ok {
 			continue
 		}
-		if selected == "" || statusRank(policy, rule.Outcome) < statusRank(policy, policy.Rules[selected].Outcome) {
+		if selected == "" || statusRank(policy, rule.Outcome) < statusRank(policy, policy.Rules[selected].Outcome) || (statusRank(policy, rule.Outcome) == statusRank(policy, policy.Rules[selected].Outcome) && code < selected) {
 			selected = code
 		}
 	}

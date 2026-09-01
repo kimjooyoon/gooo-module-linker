@@ -12,27 +12,29 @@ import (
 )
 
 type result struct {
-	Kind               string `json:"kind"`
-	Name               string `json:"name"`
-	Expected           string `json:"expected"`
-	Actual             string `json:"actual"`
-	CanonicalDigest    string `json:"canonical_digest,omitempty"`
-	ComparedDigest     string `json:"compared_digest,omitempty"`
-	Passed             bool   `json:"passed"`
-	UnknownFieldsValid bool   `json:"unknown_fields_valid"`
-	Failure            string `json:"failure,omitempty"`
+	Kind               string              `json:"kind"`
+	Name               string              `json:"name"`
+	Expected           string              `json:"expected"`
+	Actual             string              `json:"actual"`
+	CanonicalDigest    string              `json:"canonical_digest,omitempty"`
+	ComparedDigest     string              `json:"compared_digest,omitempty"`
+	Diagnostics        []linker.Diagnostic `json:"diagnostics,omitempty"`
+	Passed             bool                `json:"passed"`
+	UnknownFieldsValid bool                `json:"unknown_fields_valid"`
+	Failure            string              `json:"failure,omitempty"`
 }
 
 type report struct {
-	Schema   string   `json:"schema"`
-	Identity string   `json:"identity"`
-	Total    int      `json:"total"`
-	Selected int      `json:"selected"`
-	Executed int      `json:"executed"`
-	Reused   int      `json:"reused"`
-	Failed   int      `json:"failed"`
-	Unknown  int      `json:"unknown"`
-	Results  []result `json:"results"`
+	Schema     string   `json:"schema"`
+	Identity   string   `json:"identity"`
+	Precedence []string `json:"precedence"`
+	Total      int      `json:"total"`
+	Selected   int      `json:"selected"`
+	Executed   int      `json:"executed"`
+	Reused     int      `json:"reused"`
+	Failed     int      `json:"failed"`
+	Unknown    int      `json:"unknown"`
+	Results    []result `json:"results"`
 }
 
 func main() {
@@ -52,7 +54,7 @@ func main() {
 	if err != nil {
 		fail(err.Error())
 	}
-	output := report{Schema: "gooo.conformance/v1", Identity: manifest.Identity, Total: len(manifest.Scenarios) + len(manifest.Comparisons)}
+	output := report{Schema: "gooo.conformance/v1", Identity: manifest.Identity, Precedence: policy.Precedence, Total: len(manifest.Scenarios) + len(manifest.Comparisons)}
 	for _, scenario := range manifest.Scenarios {
 		if !scenario.Selected {
 			continue
@@ -79,7 +81,7 @@ func main() {
 		if !passed {
 			output.Failed++
 		}
-		output.Results = append(output.Results, result{Kind: "scenario", Name: scenario.Name, Expected: scenario.Expected, Actual: graph.Status, CanonicalDigest: graph.CanonicalDigest, Passed: passed, UnknownFieldsValid: unknownValid})
+		output.Results = append(output.Results, result{Kind: "scenario", Name: scenario.Name, Expected: scenario.Expected, Actual: graph.Status, CanonicalDigest: graph.CanonicalDigest, Diagnostics: graph.Diagnostics, Passed: passed, UnknownFieldsValid: unknownValid})
 	}
 	for _, comparison := range manifest.Comparisons {
 		if !comparison.Selected {
@@ -103,7 +105,7 @@ func main() {
 		if !passed {
 			output.Failed++
 		}
-		output.Results = append(output.Results, result{Kind: "comparison", Name: comparison.Name, Expected: comparison.Expected, Actual: left.Status, CanonicalDigest: left.CanonicalDigest, ComparedDigest: right.CanonicalDigest, Passed: passed, UnknownFieldsValid: unknownValid})
+		output.Results = append(output.Results, result{Kind: "comparison", Name: comparison.Name, Expected: comparison.Expected, Actual: left.Status, CanonicalDigest: left.CanonicalDigest, ComparedDigest: right.CanonicalDigest, Diagnostics: left.Diagnostics, Passed: passed, UnknownFieldsValid: unknownValid})
 	}
 	data, err := json.MarshalIndent(output, "", "  ")
 	if err != nil {
