@@ -1,0 +1,4 @@
+module "example/cycle-a" release "v1.0.0" digest "sha256:f91fb802379b3e3e1ce926d290c469e5b6b6aa4ea5325bbfbbb6ba178929102b" cycle_policy "acyclic" {
+  import "example/cycle-b" release "v1.0.0" digest "sha256:fb4dc945d0f2472a9210bdfb6e687dd54eca4bfd44b8c56fdf19257083ef9956" symbol "BValue" owner "example/cycle-b"
+  export "AValue" owner "example/cycle-a"
+}

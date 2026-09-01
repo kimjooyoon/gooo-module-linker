@@ -1,0 +1,4 @@
+module "example/cycle-unknown-a" release "v1.0.0" digest "sha256:abb4f4c07a6fd0cb3939ad164c93dc1b91620a6b76a9b5177da39d2b66b8d0b0" cycle_policy "unknown" {
+  import "example/cycle-unknown-b" release "v1.0.0" digest "sha256:fce8e8ba1ce13ea56805651afec040e7c131b35f92db7e09cc911ff4b6221f3a" symbol "BValue" owner "example/cycle-unknown-b"
+  export "AValue" owner "example/cycle-unknown-a"
+}

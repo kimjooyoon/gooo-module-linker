@@ -1,0 +1,3 @@
+module "example/missing-consumer" release "v1.0.0" digest "sha256:8fc17febb3fea8064c65aa21da46723ca345d58738cb8abcc8af3a66f1d301b1" cycle_policy "acyclic" {
+  import "example/not-present" release "v1.0.0" digest "sha256:9999999999999999999999999999999999999999999999999999999999999999" symbol "MissingValue" owner "example/not-present"
+}

@@ -1,0 +1,11 @@
+conformance "gooo-module-linker/v1" {
+  scenario "normal-3-module" expect "CLOSED" inputs "fixtures/modules/app.gooo,fixtures/modules/feature.gooo,fixtures/modules/core.gooo" selected "true"
+  scenario "duplicate-export-refuted" expect "REFUTED" inputs "fixtures/scenarios/duplicate-left.gooo,fixtures/scenarios/duplicate-right.gooo" selected "true"
+  scenario "missing-import-unknown" expect "UNKNOWN" inputs "fixtures/scenarios/missing-consumer.gooo" selected "true"
+  scenario "digest-mismatch-refuted" expect "REFUTED" inputs "fixtures/scenarios/digest-consumer.gooo,fixtures/modules/core.gooo" selected "true"
+  scenario "release-mismatch-refuted" expect "REFUTED" inputs "fixtures/scenarios/release-consumer.gooo,fixtures/modules/core.gooo" selected "true"
+  scenario "cycle-refuted" expect "REFUTED" inputs "fixtures/scenarios/cycle-a.gooo,fixtures/scenarios/cycle-b.gooo" selected "true"
+  scenario "cycle-unknown" expect "UNKNOWN" inputs "fixtures/scenarios/cycle-unknown-a.gooo,fixtures/scenarios/cycle-unknown-b.gooo" selected "true"
+  scenario "cycle-allow-closed" expect "CLOSED" inputs "fixtures/scenarios/cycle-allow-a.gooo,fixtures/scenarios/cycle-allow-b.gooo" selected "true"
+  comparison "input-order-invariance" expect "CLOSED" left "fixtures/modules/app.gooo,fixtures/modules/feature.gooo,fixtures/modules/core.gooo" right "fixtures/modules/core.gooo,fixtures/modules/feature.gooo,fixtures/modules/app.gooo" selected "true"
+}

@@ -1,0 +1,5 @@
+module "example/app" release "v1.0.0" digest "sha256:b9ae10aedd60f906b92fc60420d3f37f415828aead2d5a0326e7c02f712960f7" cycle_policy "acyclic" {
+  import "example/core" release "v1.0.0" digest "sha256:ca6620e7885e8e27ed1280baf132a9fc6023f121ccd0ddc0ade45fad643dab92" symbol "CoreValue" owner "example/core"
+  import "example/feature" release "v1.0.0" digest "sha256:ad04c1bf490d2fff96ee732eeaa6fbe576d9cfc6a12f9b8ff9211fb5a5477a4b" symbol "FeatureValue" owner "example/feature"
+  export "AppValue" owner "example/app"
+}

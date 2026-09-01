@@ -1,0 +1,3 @@
+module "example/core" release "v1.0.0" digest "sha256:ca6620e7885e8e27ed1280baf132a9fc6023f121ccd0ddc0ade45fad643dab92" cycle_policy "acyclic" {
+  export "CoreValue" owner "example/core"
+}
