@@ -1,0 +1,6 @@
+meta bootstrap {
+  source "gooo-repository-bootstrap" release "v0.1.1"
+  asset "gooo-evidence-0.1.1.json" digest "sha256:dc204e92d219e291b9568f18affd556f226fc54114c008d00e6189ea169c9076"
+  authority "metacode"
+  post_bootstrap "pull-request-only"
+}

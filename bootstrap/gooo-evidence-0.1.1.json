@@ -1,0 +1,87 @@
+{
+  "schema": "gooo.release-evidence/v1",
+  "repository": {
+    "full_name": "kimjooyoon/gooo-repository-bootstrap",
+    "id": 1352853230,
+    "visibility": "public"
+  },
+  "contract": {
+    "path": ".gooo/bootstrap.gooo",
+    "authority": "metacode",
+    "digest": "sha256:f0e70e67fa3a9970a59cfcea663145e6e90639d4f3cce4164b790c8289a4434c",
+    "improvement_before_after_integer_pair_required": true,
+    "unsupported_claims_without_evidence": [
+      "global_language_self_improvement",
+      "external_utility"
+    ]
+  },
+  "history": {
+    "bootstrap_direct_main": 1,
+    "bootstrap_exception": "BOOTSTRAP_EXCEPTION",
+    "bootstrap_commit_count": 1,
+    "bootstrap_commit_sha": "8f505416ddd0a4a553b5b29cf0d1acea2568d763",
+    "post_bootstrap_direct_main": 0,
+    "main_head_sha": "594b917c4b289adaf7b83e079bb526df68b339bb",
+    "main_head_parents": [
+      "bb7f03b3634d69e3702dab0b2a1ef7c97e17ec4e",
+      "3f0e319e2e268d4575f9d6ac1362bcf0d1ddac3f"
+    ],
+    "merge_pr": 2,
+    "merge_commit_sha": "594b917c4b289adaf7b83e079bb526df68b339bb"
+  },
+  "policy_observation": {
+    "immutable_releases": {
+      "enabled": true,
+      "enforced_by_owner": false,
+      "rest_endpoint": "/repos/kimjooyoon/gooo-repository-bootstrap/immutable-releases"
+    },
+    "ruleset": {
+      "id": 21957994,
+      "name": "gooo-pr-only-main",
+      "target": "branch",
+      "enforcement": "active",
+      "default_branch_scope": "~DEFAULT_BRANCH",
+      "rule": "pull_request",
+      "bypass_actors": []
+    },
+    "status_precedence": ["REFUTED", "UNKNOWN", "CLOSED"]
+  },
+  "ci": {
+    "run_id": 33439933610,
+    "job_id": 99645378854,
+    "artifact_id": 9775837285,
+    "artifact_name": "gooo-evidence",
+    "artifact_bytes": 1299,
+    "artifact_sha256": "sha256:646e3113c010d29958414218d884d2adee7e936e1694f50912a77e3a3ee05ff8"
+  },
+  "metrics": {
+    "inventory": {
+      "go_files": 7,
+      "go_physical_lines": 1124,
+      "gooo_files": 1,
+      "gooo_physical_lines": 86,
+      "subdirectories": 7,
+      "regular_files": 11,
+      "root_readme_excluded": true
+    },
+    "runtime": {
+      "build": {"wall_ms": 5642, "peak_rss_kib": 162200},
+      "test": {"wall_ms": 2001, "peak_rss_kib": 139868},
+      "conformance": {"wall_ms": 5, "peak_rss_kib": 11288}
+    },
+    "tests": {"total": 5, "executed": 5, "reused": 0, "failed": 0, "unknown": 0},
+    "generated_artifacts": {"count": 2, "bytes": 697},
+    "target_repo_writes_before_apply": 0
+  },
+  "release": {
+    "tag": "v0.1.1",
+    "tag_object_sha": "964d9d886d4c650212804bcbba1c00c8715bec07",
+    "tag_target_sha": "594b917c4b289adaf7b83e079bb526df68b339bb",
+    "tag_type": "annotated",
+    "previous_release_preserved": "v0.1.0"
+  },
+  "asset": {
+    "name": "gooo-evidence-0.1.1.json",
+    "contents_exclude_self_id": true
+  }
+}
