@@ -24,6 +24,11 @@ func Link(policy Policy, input []Module) (LinkedGraph, error) {
 		}
 		sortModule(&modules[i])
 	}
+	for _, module := range modules {
+		if _, declared := policy.CycleRules[module.CyclePolicy]; !declared {
+			return LinkedGraph{}, fmt.Errorf("module %q uses undeclared cycle policy %q", module.Identity, module.CyclePolicy)
+		}
+	}
 	sort.Slice(modules, func(i, j int) bool { return modules[i].Identity < modules[j].Identity })
 
 	graph := LinkedGraph{Schema: "gooo.linked-ir/v1", Status: policy.Default, Modules: modules}
