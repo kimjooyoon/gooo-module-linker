@@ -102,6 +102,10 @@ func ParsePolicyFile(path string) (Policy, error) {
 	policy := Policy{Rules: map[string]Rule{}, CycleRules: map[string]string{}}
 	inBody := false
 	seenHeader := false
+	seenDefault := false
+	seenPrecedence := false
+	seenGeneration := false
+	seenCyclePolicies := map[string]bool{}
 	err := readLines(path, func(_ int, line string) error {
 		if !seenHeader {
 			match := policyHeaderRE.FindStringSubmatch(line)
@@ -124,10 +128,17 @@ func ParsePolicyFile(path string) (Policy, error) {
 			return fmt.Errorf("content after policy body")
 		}
 		if match := defaultRE.FindStringSubmatch(line); match != nil {
+			if seenDefault {
+				return fmt.Errorf("duplicate default declaration")
+			}
 			policy.Default = match[1]
+			seenDefault = true
 			return nil
 		}
 		if match := precedenceRE.FindStringSubmatch(line); match != nil {
+			if seenPrecedence {
+				return fmt.Errorf("duplicate precedence declaration")
+			}
 			values, err := quotedFields(match[1])
 			if err != nil {
 				return err
@@ -143,11 +154,19 @@ func ParsePolicyFile(path string) (Policy, error) {
 			return nil
 		}
 		if match := cycleRE.FindStringSubmatch(line); match != nil {
+			if seenCyclePolicies[match[1]] {
+				return fmt.Errorf("duplicate cycle policy %q", match[1])
+			}
 			policy.CycleRules[match[1]] = match[2]
+			seenCyclePolicies[match[1]] = true
 			return nil
 		}
 		if match := generationRE.FindStringSubmatch(line); match != nil {
+			if seenGeneration {
+				return fmt.Errorf("duplicate generation declaration")
+			}
 			policy.Generation = GenerationPlan{Language: match[1], Package: match[2], Entrypoint: match[3]}
+			seenGeneration = true
 			return nil
 		}
 		return fmt.Errorf("unknown policy clause %q", line)
