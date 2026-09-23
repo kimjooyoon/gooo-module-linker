@@ -26,8 +26,19 @@ var (
 
 func cleanLine(raw string) string {
 	line := strings.TrimSpace(raw)
-	if i := strings.Index(line, "#"); i >= 0 {
-		line = strings.TrimSpace(line[:i])
+	inQuote := false
+	escaped := false
+	for i, r := range line {
+		switch {
+		case escaped:
+			escaped = false
+		case r == '\\' && inQuote:
+			escaped = true
+		case r == '"':
+			inQuote = !inQuote
+		case r == '#' && !inQuote:
+			return strings.TrimSpace(line[:i])
+		}
 	}
 	return line
 }
