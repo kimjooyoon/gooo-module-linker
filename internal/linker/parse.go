@@ -136,6 +136,9 @@ func ParsePolicyFile(path string) (Policy, error) {
 			return nil
 		}
 		if match := ruleRE.FindStringSubmatch(line); match != nil {
+			if _, exists := policy.Rules[match[1]]; exists {
+				return fmt.Errorf("duplicate policy rule %q", match[1])
+			}
 			policy.Rules[match[1]] = Rule{Code: match[1], Outcome: match[2], Stage: match[3], Step: match[4], Reason: match[5], UnknownClass: match[6], NextOperation: match[7]}
 			return nil
 		}
