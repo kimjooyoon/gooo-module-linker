@@ -22,3 +22,17 @@ generation "go" package "main" entrypoint "main"
 		t.Fatal("ParsePolicyFile accepted duplicate rule IDs")
 	}
 }
+
+func TestParseConformanceRejectsUnexpectedClosingBrace(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "conformance.gooo")
+	content := `conformance "test" {
+scenario "happy" expect "CLOSED" inputs "core" selected "true"
+}
+}`
+	if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := ParseConformanceFile(path); err == nil {
+		t.Fatal("ParseConformanceFile accepted an unexpected closing brace")
+	}
+}
