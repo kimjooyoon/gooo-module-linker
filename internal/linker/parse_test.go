@@ -53,3 +53,28 @@ generation "go" package "main" entrypoint "main"
 		})
 	}
 }
+
+func TestParseModuleRejectsExactDuplicateDeclarations(t *testing.T) {
+	base := `module "app" release "v1.0.0" digest "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" cycle_policy "acyclic" {
+export "run" owner "app"
+import "core" release "v1.0.0" digest "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" symbol "value" owner "core"
+}`
+	for _, test := range []struct {
+		name   string
+		anchor string
+	}{
+		{name: "export", anchor: `export "run" owner "app"`},
+		{name: "import", anchor: `import "core" release "v1.0.0" digest "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" symbol "value" owner "core"`},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			content := strings.Replace(base, test.anchor, test.anchor+"\n"+test.anchor, 1)
+			path := filepath.Join(t.TempDir(), "module.gooo")
+			if err := os.WriteFile(path, []byte(content), 0o600); err != nil {
+				t.Fatal(err)
+			}
+			if _, err := ParseModuleFile(path); err == nil {
+				t.Fatalf("ParseModuleFile accepted duplicate %s declaration", test.name)
+			}
+		})
+	}
+}

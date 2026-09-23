@@ -58,6 +58,8 @@ func ParseModuleFile(path string) (Module, error) {
 	var module Module
 	inBody := false
 	seenHeader := false
+	seenExports := map[string]bool{}
+	seenImports := map[string]bool{}
 	err := readLines(path, func(_ int, line string) error {
 		if !seenHeader {
 			match := moduleHeaderRE.FindStringSubmatch(line)
@@ -80,10 +82,20 @@ func ParseModuleFile(path string) (Module, error) {
 			return fmt.Errorf("content after module body")
 		}
 		if match := exportRE.FindStringSubmatch(line); match != nil {
+			key := match[1] + "\x00" + match[2]
+			if seenExports[key] {
+				return fmt.Errorf("duplicate export declaration %q", match[1])
+			}
+			seenExports[key] = true
 			module.Exports = append(module.Exports, Export{Symbol: match[1], Owner: match[2]})
 			return nil
 		}
 		if match := importRE.FindStringSubmatch(line); match != nil {
+			key := strings.Join(match[1:6], "\x00")
+			if seenImports[key] {
+				return fmt.Errorf("duplicate import declaration %q", match[4])
+			}
+			seenImports[key] = true
 			module.Imports = append(module.Imports, Import{Module: match[1], Release: match[2], Digest: match[3], Symbol: match[4], Owner: match[5]})
 			return nil
 		}
