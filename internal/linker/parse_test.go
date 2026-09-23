@@ -42,3 +42,17 @@ generation "go" package "main" entrypoint "main"
 		t.Fatalf("ParsePolicyFile truncated quoted hash: got %q", got)
 	}
 }
+
+func TestParseConformanceRejectsDuplicateClosingBraces(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "conformance.gooo")
+	content := `conformance "test" {
+scenario "basic" expect "CLOSED" inputs "one" selected "true"
+}
+}`
+	if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := ParseConformanceFile(path); err == nil {
+		t.Fatal("ParseConformanceFile accepted duplicate closing braces")
+	}
+}

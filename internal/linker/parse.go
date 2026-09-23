@@ -191,6 +191,9 @@ func ParseConformanceFile(path string) (Conformance, error) {
 			return nil
 		}
 		if line == "}" {
+			if !inBody {
+				return fmt.Errorf("unexpected closing brace")
+			}
 			inBody = false
 			return nil
 		}
